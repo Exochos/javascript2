@@ -1,52 +1,69 @@
-import { parse } from "querystring";
-import * as data from "./data.js";
-import http from 'http';
-//import fs from 'fs';
 
-http.createServer(function(request, response) {
-var ip = request.headers['x-forwarded-for'] || request.connection.remoteAddresponses;
-var url = request.url;
-let urls = request.url.split("?");  // separate route from query string
-let path = urls[0].toLowerCase(); // Get Part of the path for case
-console.log(path);
-switch(path) {
+/*          _ _  _ ___  ____ ____ ___ ____ 
+            | |\/| |__] |  | |__/  |  [__  
+            | |  | |    |__| |  \  |  ___]          */                             
+'use strict'
+let exphbs = require("express-handlebars")
+const express = require("express")
+const bodyParser = require("body-parser")
+const data = require('./data.js')
+///////////////////////////////////////////////////////
 
-    case "/": // Default page now with JSON
-        response.writeHead(200, {'Content-Type': 'text/html'}); // Return 200 - found it - html is ok
-        let doggy = data.getAll(); // get all from doogies
-        response.write("<table style='border:1px solid black;'><tr style='font-weight:bold;border:1px solid black;'><td>Name:</td><td>Breed:</td><td>Age:</td><td>Height:</td><td>Weight:</td>");
-        for(let i=0;i<doggy.length;i++) {
-            response.write('<tr style="border: 1px solid black">');
-            response.write('<td>'+ doggy[i].name + '</td><td>' + doggy[i].breed + "</td><td>" + doggy[i].age + "</td><td>"+ doggy[i].height + "</td><td>"+ doggy[i].weight + "</td>");
-            response.write("</tr>");
+
+/*      ____ _  _ ____ _ _  _ ____ 
+        |___ |\ | | __ | |\ | |___ 
+        |___ | \| |__] | | \| |___                  */
+const app = express();
+app.engine('handlebars', exphbs({defaultLayout: false}));
+app.set("view engine", "handlebars");
+app.set('port', process.env.PORT || 3000);
+app.use(express.static(__dirname+ '/public'));
+app.use(express.json());
+app.use(bodyParser.urlencoded({extended: true}));
+///////////////////////////////////////////////////////
+
+
+                
+/*      ____ ____ _  _ ___ ____ ____ 
+        |__/ |  | |  |  |  |___ [__  
+        |  \ |__| |__|  |  |___ ___]                */
+
+    app.get('/', (req, res) => {
+        let result = data.getAll();
+        res.render('home', { result : result } );
+    });
+
+    app.get('/about', (req, res) => {
+    res.type('text/plain');
+    res.send('About page');
+    });
+
+    app.get('/detail', (req, res) => {
+        if(data.getItem(req.query.name)) {
+            let result = data.getItem(req.query.name);
+            res.render('details', {data : result});
         }
-        response.write("</table>");
-        response.end(); 
-        break;
+        else {
+            res.send("404 Not Found");
+        }
+        
+    });
+// 404 route   //
+app.use( (req,res) => {
+    res.type('text/html');
+    res.status(404);
+    res.sendFile(__dirname + '/public/404.html'); 
+});
+///////////////////////////////////////////////////////
 
-    case '/about': // About Jeremy Page
-        response.writeHead(200, {'Content-Type': 'text/html'});
-        response.write('<h1> Hello My name is Jeremy Ward</h1>'); 
-        response.write('<p> Welcome to my website ! Share and enjoy! </p>'); 
-        response.end(); 
-        break;
-      case '/get': // Our get method 
-        if (request.method == "GET") {
-            response.writeHead(200, {'Content-Type': 'text/html'});
-            let query = request.url.split("?");
-            if (data.getItem(query[1])) {
-               response.write(JSON.stringify(data.getItem(query[1])));
-            }
-            else {
-                response.end('Page Not found Please Try Again!'); 
-            }
-            response.end();
-        } 
-        break;
-    default:
-        response.writeHead(404, {'Content-Type': 'text/html'});
-        response.write("<h1>404 Page Not Found</h1>");
-        response.end();
-  }
 
-}).listen(3000);
+/*       _     _     _             
+        | |   (_)   | |            
+        | |    _ ___| |_ ___ _ __  
+        | |   | / __| __/ _ \ '_ \ 
+        | |___| \__ \ ||  __/ | | |
+        \_____/_|___/\__\___|_| |_|                  */
+app.listen(app.get('port'), () => {
+console.log('Express started! Running on localhost:3000'); 
+});
+///////////////////////////////////////////////////////

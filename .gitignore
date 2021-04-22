@@ -1,1 +1,5 @@
 /node_modules/*
+#ignore files installed by npm
+/archived/*
+node_modules
+/react/*

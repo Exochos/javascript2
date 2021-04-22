@@ -5,6 +5,7 @@ let dogs = [
         age: "3",
         height: "3ft",
         weight: "30lbs",
+        img: "freddie.jpg"
     },
     {
         name: "Charlie",
@@ -12,6 +13,7 @@ let dogs = [
         age: "13",
         height: "2ft",
         weight: "25lbs",
+        img: "charlie.jpg"
     },
     {
         name: "June",
@@ -19,13 +21,15 @@ let dogs = [
         age: "4",
         height: "3ft",
         weight: "50lbs",
+        img: "june.jpg"
     },
     {
         name: "Teddie",
-        breed: "golden retriever",
-        age: "2",
+        breed: "Labrador Retriever",
+        age: ".8",
         height: "3ft",
         weight: "50lbs",
+        img: "teddie.jpg"
     },
     {
         name: "Cap",
@@ -33,19 +37,14 @@ let dogs = [
         age: "5",
         height: "3ft",
         weight: "55lbs",
+        img: "cap.jpg"
     }
 ];
 
-const getAll = () => {
+module.exports.getAll = () => {
     return dogs;
 };
 
-const getItem = (name) => {
-    var doggo = dogs.find(o => o.name === name);
-    return doggo;
+module.exports.getItem = (name) => {
+    return dogs.find(o => o.name === name);
 };
-export { getAll, getItem }
-
-
-//console.log(getItem("Freddie"));
-//console.log(dogs);
