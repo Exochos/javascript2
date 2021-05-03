@@ -55,8 +55,8 @@ module.exports.addItem = (item) => {
 */
 module.exports.deleteItem = (name) => {
   const oldLength = dogs.length;
-  dogs = dogs.filter((name) => {
-    return dogs.name !== name;
+  dogs = dogs.filter((a) => {
+    return a.name !== name;
   });
   return {deleted: oldLength !== dogs.length, total: dogs.length};
 };
