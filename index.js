@@ -6,7 +6,8 @@
 const exphbs = require('express-handlebars');
 const express = require('express');
 const bodyParser = require('body-parser');
-const data = require('./data.js');
+// const data = require('./data.js');
+const data = require('./models/dogs.js');
 
 
 /*      ____ _  _ ____ _ _  _ ____
@@ -25,8 +26,11 @@ app.use(bodyParser.urlencoded({extended: true}));
         |__/ |  | |  |  |  |___ [__
         |  \ |__| |__|  |  |___ ___]                */
 app.get('/', (req, res) => {
-  const result = data.getAll();
-  res.render('home', {result: result});
+  data.find({}).lean()
+      .then((data) => {
+        res.render('home', {result: data});
+      })
+      .catch( (err) => next(err));
 });
 
 
@@ -35,13 +39,13 @@ app.get('/about', (req, res) => {
   res.send('About page');
 });
 
-app.get('/detail', (req, res) => {
-  if (data.getItem(req.query.name)) {
-    const result = data.getItem(req.query.name);
-    res.render('details', {data: result});
-  } else {
-    res.send('404 Not Found');
-  }
+app.get('/detail', (req, res, next) => {
+  data.findOne({name: req.query.name}).lean()
+      .then((data) => {
+        // console.log(data);
+        res.render('details', {data: data} );
+      })
+      .catch( (err) => next(err));
 });
 
 app.use( (req, res) => {
