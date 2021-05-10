@@ -6,10 +6,11 @@ const Schema = mongoose.Schema;
 const connectionString = require('../credentials.js');
 
 mongoose.connect(connectionString, {
-  dbName: 'aa',
+  dbName: 'doggos01',
   useNewUrlParser: true,
   useUnifiedTopology: true,
-});
+  serverSelectionTimeoutMS: 5000,
+}).catch((err) => console.log(err.reason));
 
 mongoose.connection.on('open', () => {
   console.log('Mongoose connected.');
@@ -25,7 +26,7 @@ const dogSchema = new Schema({
   img: String,
 },
 {
-  collection: 'a'},
+  collection: 'JavaScript2'},
 );
 
 module.exports = mongoose.model('Dog', dogSchema);
