@@ -2,9 +2,8 @@
 const mongoose = require('mongoose');
 // const {Schema} = mongoose;
 const Schema = mongoose.Schema;
-// const connectS = require('../credentials.js');
 // const connectionString = connectS;
-const connectionString = 'mongodb://localhost:27017/';
+const connectionString = require('../credentials.js');
 
 mongoose.connect(connectionString, {
   dbName: 'aa',
