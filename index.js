@@ -74,7 +74,10 @@ app.get('/api/delete', (req, res) => {
     }
   });
 });
-
+app.get('/api/adddogs/', (req, res) => {
+  res.render('about', {data: data});
+  res.close;
+});
 app.post('/api/adddogs', (req, res) => {
   const myData = req.body;
   data.create(myData)
