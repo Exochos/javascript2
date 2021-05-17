@@ -1,10 +1,9 @@
-
+// Imports Live Here              //
 const mongoose = require('mongoose');
-// const {Schema} = mongoose;
 const Schema = mongoose.Schema;
-// const connectionString = connectS;
 const connectionString = require('../credentials.js');
 
+// Connection string for database //
 mongoose.connect(connectionString, {
   dbName: 'doggos01',
   useNewUrlParser: true,
@@ -12,6 +11,8 @@ mongoose.connect(connectionString, {
   serverSelectionTimeoutMS: 5000,
 }).catch((err) => console.log(err.reason));
 
+
+// Log that we connected          //
 mongoose.connection.on('open', () => {
   console.log('Mongoose connected.');
 });
@@ -25,8 +26,6 @@ const dogSchema = new Schema({
   weight: String,
   img: String,
 },
-{
-  collection: 'JavaScript2'},
-);
+{collection: 'JavaScript2'});
 
 module.exports = mongoose.model('Dog', dogSchema);

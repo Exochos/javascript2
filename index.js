@@ -33,7 +33,6 @@ app.get('/', (req, res) => {
       .catch( (err) => next(err));
 });
 
-
 app.get('/about', (req, res) => {
   res.type('text/plain');
   res.send('About page');
@@ -46,6 +45,43 @@ app.get('/detail', (req, res, next) => {
         res.render('details', {data: data} );
       })
       .catch( (err) => next(err));
+});
+// ////////////////
+// API ROUTES   //
+// //////////////
+app.get('/api/dogs', (req, res) => {
+  data.find({}).lean()
+      .then((data) => {
+        res.json(data);
+      }).catch( (err) => next(err));
+});
+
+app.get('/api/getdog', (req, res) => {
+  const myquery = {name: req.query.name};
+  data.findOne(myquery)
+      .then((data) => {
+        res.json(data);
+      }).catch( (err) => res.render('handler', {data: err} ));
+});
+
+app.get('/api/delete', (req, res) => {
+  const myquery = {name: req.query.name};
+  data.deleteOne(myquery, (err, obj) => {
+    if (err) {
+      res.render('handler', {data: err} );
+    } else {
+      res.render('handler', {data: 'Deleted Successfully'});
+    }
+  });
+});
+
+app.post('/api/adddogs', (req, res) => {
+  const myData = req.body;
+  data.create(myData)
+      .then(res.send('item saved to database'))
+      .catch((err) => {
+        res.status(400).send('unable to save to database');
+      });
 });
 
 app.use( (req, res) => {
