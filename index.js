@@ -25,12 +25,16 @@ app.use(bodyParser.urlencoded({extended: true}));
 /*      ____ ____ _  _ ___ ____ ____
         |__/ |  | |  |  |  |___ [__
         |  \ |__| |__|  |  |___ ___]                */
+//
 app.get('/', (req, res) => {
   data.find({}).lean()
       .then((data) => {
-        res.render('home', {result: data});
+        // res.render('home', {result: data});
+        res.render('home2', {data: JSON.stringify(data)});
       })
-      .catch( (err) => next(err));
+      .catch( (err) => {
+        console.log(err);
+      });
 });
 
 app.get('/about', (req, res) => {

@@ -19,24 +19,50 @@
     <!-- Don't use this in production: -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   </head>
+
+
+
+
+
+
+
+
+
+
+
+
 <body><main>
     <div class="container">
         <div class="row">
-          	{{#each result}}
-              <div class="col-md-3 col-sm-6 item" style="margin-top: 30px;">
-              <div class="card text-center">
-                <div class="card-body" >
-                <h4 class="card-title"><a href="./detail?name={{{this.name}}}"> Name: {{{this.name}}}</a></h4>
-                <h6 class="card-subtitle mb-2">Breed: {{{this.breed}}}</h6>
-                <p class="card-text">Age: {{{this.age}}}</p>
-                <p class="card-text">Weight: {{{this.weight}}}</p>
-                <p class="card-text">Height: {{{this.height}}}</p>
-                <p class="card-text"><a href="/">Back to Main</a></p>
-                </div></div>     </div> 
-	    {{/each}}
+          <h2>Demo</h2>
+          <div id="root"></div>
 
-            
 
+<script type="text/babel">
+ 
+
+  const dogs = {{{data}}}
+  //console.log(dogs)
+
+
+  const Dogs = (props) => {
+    console.log('Props:' + props)
+    const listItems = props.data.map((item) =>
+    <li key={item._id} onClick={props.clickHandler}>
+        {item.name}
+    </li>);
+    return <ul>{listItems}</ul>
+  }
+  
+
+
+  ReactDOM.render(
+      <div><Dogs data={dogs} /></div>,
+      document.getElementById('root')
+  );
+
+
+</script>
 
     </div>
 </main></body>
