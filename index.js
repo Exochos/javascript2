@@ -30,7 +30,7 @@ app.get('/', (req, res) => {
   data.find({}).lean()
       .then((data) => {
         // res.render('home', {result: data});
-        res.render('home2', {data: JSON.stringify(data)});
+        res.render('home3', {data: JSON.stringify(data)});
       })
       .catch( (err) => {
         console.log(err);

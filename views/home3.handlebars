@@ -31,22 +31,31 @@
 <body><main>
     <div class="container">
         <div class="row">
-          <h2>Demo</h2>
+          <h2>Dog App</h2><br><br>
+        </div>
+        <div class="row">
+        <div class="col-sm">
           <div id="root"></div>
+        </div>
+      </div>
+
+
 
 
 <script type="text/babel">
-  //                                     //
+  // Data Gets passed from node to here.                              //
   const dogs = {{{data}}}
 
 
   const Dogs = (props) => {
     const listItems = props.data.map((item) =>
-    <div key={item._id}>
-    <li> {item.name} </li>
-    <li> {item.age} </li>
+    <div key={item._id}><br />
+    <li>Name:<a href={"/detail?name="+item.name}> {item.name} </a></li>
+    <li>Age: {item.age} </li>
     </div>
     );
+
+    
     return <ul>{listItems}</ul>
   }
   
