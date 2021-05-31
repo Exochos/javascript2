@@ -17,80 +17,66 @@
     <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
     <style>
+      * {
+        background-color: black;
+        color: white;
+      }
     </style>
     <!-- Don't use this in production: -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   </head>
 
-<body><main>
-    <div class="container">
-      <br /><br /><br />
-        <div class="row">
-        </div>
-        <div class="row">
-        <div class="col-sm">
-          <br />
-          <div id="root"></div>
-        </div>
+<body>
+<main>
+  <div class="container">
+      <div class="d-flex flex-column">
+        <div id="root"></div>
       </div>
+  </div>
+
+
+
 <script type="text/babel">
 
-const Dogs = (props) => {
-  console.log(props)  
-  const ItemList = props.data.map((item) => 
-    <li key={item._id} onClick={props.clickHandler}> {item.name} </li>
-  );
-  return <ul> {ItemList} </ul>
-}
+/////////////////////////////////////////
+// Define Main App Here                //
+/////////////////////////////////////////
+ const dogs = {{{data}}}
 
-class DogApp extends React.Component {
+
+  const Dogs = (props) => {
+    const listItems = props.data.map((item) =>
+    <div key={item._id}><br />
+    <li> Name:<a href={"/detail?name="+item.name}> {item.name} </a></li>
+    <li> Age: {item.age} </li>
+    </div>
+    );
+    return <ul>{listItems}</ul>
+  }
+
+class SinglePageApp extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      items: {{{data}}},
-      currentItem: {}
-    
+        items: {{{data}}},
     };
-    this.selectItem = this.selectItem.bind(this);
-  }
-    selectItem = (event) => {
-    console.log("Got Event Click")
-    console.log(event.target)
-    console.log(event.target.innerText)
-    console.log(event.target.id)
-    const found = this.state.items.find((item) => {
-      return item.name === event.target.innerText
-    });
-
-    this.setState({currentItem: found})
+console.log(this.state.items);
 }
-render() {
-  return (
-    <div><h2>Dogs in the Database</h2><hr />
-    <Dogs data={this.state.items} clickHandler={this.selectItem} />
-    <ItemDetail item={this.state.currentItem}/>
-  </div>);
+
+  render() {
+    return (
+      <div>
+        <Dogs data={dogs} />
+      </div>
+    );
   }
 }
-
-const ItemDetail = (props) => {
-  return <div><hr />
-    <h3> - Dog Details - </h3>
-    <ul>
-      <li>Name: {props.item.name} </li>
-      <li>Age: {props.item.age} </li>
-      <li>Weight: {props.item.height} </li>
-    </ul>
-    </div>
-}
-
 
 ReactDOM.render(
-  <DogApp />,
+  <SinglePageApp />,
   document.getElementById('root')
 );
-
 </script>
-</div>
-</main></body>
+</main>
+</body>
 </html>

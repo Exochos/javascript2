@@ -29,7 +29,6 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.get('/', (req, res) => {
   data.find({}).lean()
       .then((data) => {
-        // res.render('home', {result: data});
         res.render('home3', {data: JSON.stringify(data)});
       })
       .catch( (err) => {
@@ -37,19 +36,20 @@ app.get('/', (req, res) => {
       });
 });
 
+app.get('/detail', (req, res, next) => {
+  data.findOne({name: req.query.name}).lean()
+      .then((data) => {
+        res.render('details', {data: data} );
+      })
+      .catch( (err) => next(err));
+});
+
+
 app.get('/about', (req, res) => {
   res.type('text/plain');
   res.send('About page');
 });
 
-app.get('/detail', (req, res, next) => {
-  data.findOne({name: req.query.name}).lean()
-      .then((data) => {
-        // console.log(data);
-        res.render('details', {data: data} );
-      })
-      .catch( (err) => next(err));
-});
 // ////////////////
 // API ROUTES   //
 // //////////////
