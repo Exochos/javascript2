@@ -49,15 +49,10 @@ class DogApp extends React.Component {
     this.state = {
       items: {{{data}}},
       currentItem: {}
-    
     };
     this.selectItem = this.selectItem.bind(this);
   }
     selectItem = (event) => {
-    console.log("Got Event Click")
-    console.log(event.target)
-    console.log(event.target.innerText)
-    console.log(event.target.id)
     const found = this.state.items.find((item) => {
       return item.name === event.target.innerText
     });
@@ -80,6 +75,7 @@ const ItemDetail = (props) => {
       <li>Name: {props.item.name} </li>
       <li>Age: {props.item.age} </li>
       <li>Weight: {props.item.height} </li>
+      <li>Breed: {props.item.breed} </li>
     </ul>
     </div>
 }
