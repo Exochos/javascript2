@@ -51,6 +51,7 @@ class DogApp extends React.Component {
       currentItem: {}
     };
     this.selectItem = this.selectItem.bind(this);
+    this.clearForm = this.clearForm.bind(this);
   }
     selectItem = (event) => {
     const found = this.state.items.find((item) => {
@@ -59,6 +60,7 @@ class DogApp extends React.Component {
 
     this.setState({currentItem: found})
 }
+
 render() {
   return (
     <div><h2>Dogs in the Database</h2><hr />
@@ -67,19 +69,40 @@ render() {
   </div>);
   }
 }
-
+const clearForm = () => {
+  this.setState.currentItem = {}
+}
+const handleChange = (event) => {
+  console.log(this.state.currentItem)
+  let newItem = this.state.currentItem
+  newItem[event.target.name] = event.target.value
+  this.setState({currentItem: name})
+}
 const ItemDetail = (props) => {
   return <div><hr />
     <h3> - Dog Details - </h3>
-    <ul>
-      <li>Name: {props.item.name} </li>
-      <li>Age: {props.item.age} </li>
-      <li>Weight: {props.item.height} </li>
-      <li>Breed: {props.item.breed} </li>
-    </ul>
+    <form>
+            <label>
+              Name:
+              <input type="text" name="name" value={props.item.name} onChange=""/>
+            </label><br />
+            <label>
+              Age:
+              <input type="text" name="age" value={props.item.age} />
+            </label><br/>
+            <label>
+              Height:
+              <input type="text" name="height" value={props.item.height} />
+            </label><br/>
+            <label>
+              Breed:
+              <input type="text" name="breed" value={props.item.breed} />
+            </label><br/>
+         
+          </form>
+          <input type="submit" value="Submit" /><input name="clear" onClick={props.clearForm} />
     </div>
 }
-
 
 ReactDOM.render(
   <DogApp />,
