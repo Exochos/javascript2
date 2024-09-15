@@ -33,10 +33,12 @@
           <div id="root"></div>
         </div>
       </div>
+
+
 <script type="text/babel">
+// Begin React //
 
 const Dogs = (props) => {
-  console.log(props)  
   const ItemList = props.data.map((item) => 
     <li key={item._id} onClick={props.clickHandler}> {item.name} </li>
   );
@@ -51,55 +53,88 @@ class DogApp extends React.Component {
       currentItem: {}
     };
     this.selectItem = this.selectItem.bind(this);
-  //  this.clearForm = this.clearForm.bind(this);
+    this.clearForm = this.clearForm.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.saveForm = this.saveForm.bind(this);
+    this.deleteForm = this.deleteForm.bind(this);
   }
     selectItem = (event) => {
-    const found = this.state.items.find((item) => {
-      return item.name === event.target.innerText
-    });
+      const found = this.state.items.find((item) => {
+        return item.name === event.target.innerText
+      });
+      this.setState({currentItem: found})
+    }
+    handleChange = (event) => {
+      let newItem = this.state.currentItem
+      newItem[event.target.name] = event.target.value
+      this.setState({currentItem: newItem})
+    }
 
-    this.setState({currentItem: found})
-}
+    clearForm = () => {
+      this.setState({ currentItem: {} })
+    }
+
+    //
+    // Save Form Method
+    // 
+    saveForm = () => {
+      fetch("/api/adddogs", {
+        method: "POST",
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(this.state.currentItem)
+      })
+      .then(res => res.json())
+      .then((json) => { console.log(json) });
+    }
+
+    //
+    // Delete form method
+    //
+    deleteForm = () => {
+      const dogID = "/api/delete?name=" + this.state.currentItem.name
+      console.log(dogID)
+      fetch(dogID, {
+        method: "GET",
+        headers: { 'Content-Type': 'application/json'},
+      })
+      .then(res => res.json())
+      .then((json) => { console.log(json) });
+    }
 
 render() {
   return (
     <div><h2>Dogs in the Database</h2><hr />
     <Dogs data={this.state.items} clickHandler={this.selectItem} />
-    <ItemDetail item={this.state.currentItem}/>
+    <ItemDetail 
+      item = { this.state.currentItem } 
+      handleChange = { this.handleChange } 
+      clearForm = { this.clearForm } 
+      saveForm = { this.saveForm }
+      deleteForm = { this.deleteForm }
+    />
   </div>);
   }
 }
-const clearForm = () => {
-  this.setState.currentItem = {}
-}
-const handleChange = (event) => {
-  console.log(this.state.currentItem)
-  let newItem = this.state.currentItem
-  newItem[event.target.name] = event.target.value
-  this.setState({currentItem: name})
-}
+
 const ItemDetail = (props) => {
   return <div><hr />
     <h3> - Dog Details - </h3>
     <form>
+            <label>Name:<input type="text" name="name" value={props.item.name || ""} onChange={props.handleChange} /></label><br />
+            <label>Age: <input type="text" name="age" value={props.item.age || ""} onChange={props.handleChange} /></label><br/>
             <label>
-              Name:
-              <input type="text" name="name" value={props.item.name} onChange=""/>
-            </label><br />
-            <label>
-              Age:
-              <input type="text" name="age" value={props.item.age} />
+              Height: <input type="text" name="height" value={props.item.height || ""} onChange={props.handleChange} />
             </label><br/>
             <label>
-              Height:
-              <input type="text" name="height" value={props.item.height} />
-            </label><br/>
+              Breed: <input type="text" name="breed" value={props.item.breed || ""} onChange={props.handleChange} />
+            </label><br/>     
             <label>
-              Breed:
-              <input type="text" name="breed" value={props.item.breed} />
-            </label><br/>
-         
-          </form>
+              Weight: <input type="text" name="weight" value={props.item.weight || ""} onChange={props.handleChange} />
+            </label><br/>     
+    </form>
+      <button name="clear" onClick={props.clearForm}> Clear </button>
+      <button name="save" onClick={ props.saveForm }> Save </button>
+      <button name="delete" onClick={ props.deleteForm }>Delete</button>
     </div>
 }
 
@@ -107,7 +142,6 @@ ReactDOM.render(
   <DogApp />,
   document.getElementById('root')
 );
-
 </script>
 </div>
 </main></body>

@@ -8,6 +8,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 // const data = require('./data.js');
 const data = require('./models/dogs.js');
+const cors = require('cors');
 
 
 /*      ____ _  _ ____ _ _  _ ____
@@ -21,6 +22,7 @@ app.set('port', process.env.PORT || 3000);
 app.use(express.static(__dirname+ '/public'));
 app.use(express.json());
 app.use(bodyParser.urlencoded({extended: true}));
+app.use('/api', cors());
 
 /*      ____ ____ _  _ ___ ____ ____
         |__/ |  | |  |  |  |___ [__
@@ -52,7 +54,7 @@ app.get('/about', (req, res) => {
 
 // ////////////////
 // API ROUTES   //
-// //////////////
+// ///////////////
 app.get('/api/dogs', (req, res) => {
   data.find({}).lean()
       .then((data) => {
@@ -78,17 +80,25 @@ app.get('/api/delete', (req, res) => {
     }
   });
 });
+
 app.get('/api/adddogs/', (req, res) => {
   res.render('about', {data: data});
   res.close;
 });
+
 app.post('/api/adddogs', (req, res) => {
   const myData = req.body;
-  data.create(myData)
-      .then(res.send('item saved to database'))
-      .catch((err) => {
-        res.status(400).send('unable to save to database');
-      });
+  if (req.body._id) {
+    data.updateOne( {_id: req.body._id}, myData, (err, result) => {
+      if (err) console.log(err);
+    }).then(res.send('item updated'));
+  } else {
+    data.create(myData)
+        .then(res.json({result: 'item saved to database'}))
+        .catch((err) => {
+          res.status(400).json({result: 'unable to save to database'});
+        });
+  }
 });
 
 app.use( (req, res) => {
@@ -102,7 +112,8 @@ app.use( (req, res) => {
         | |    _ ___| |_ ___ _ __
         | |   | / __| __/ _ \ '_ \
         | |___| \__ \ ||  __/ | | |
-        \_____/_|___/\__\___|_| |_|                  */
+        \_____/_|___/\__\___|_| |_|       */
+
 app.listen(app.get('port'), () => {
   console.log('Express started! Running on localhost:3000');
 });
